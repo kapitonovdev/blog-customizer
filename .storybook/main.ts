@@ -1,5 +1,10 @@
 import type { StorybookConfig } from '@storybook/react-webpack5';
-const path = require('path');
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import * as sass from 'sass';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const config: StorybookConfig = {
 	stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -18,9 +23,9 @@ const config: StorybookConfig = {
 						test: /\.css$/,
 						sideEffects: true,
 						use: [
-							require.resolve('style-loader'),
+							'style-loader',
 							{
-								loader: require.resolve('css-loader'),
+								loader: 'css-loader',
 								options: {
 									// Want to add more CSS Modules options? Read more here: https://github.com/webpack-contrib/css-loader#modules
 									modules: {
@@ -34,9 +39,9 @@ const config: StorybookConfig = {
 						test: /\.s[ac]ss$/,
 						sideEffects: true,
 						use: [
-							require.resolve('style-loader'),
+							'style-loader',
 							{
-								loader: require.resolve('css-loader'),
+								loader: 'css-loader',
 								options: {
 									// Want to add more CSS Modules options? Read more here: https://github.com/webpack-contrib/css-loader#modules
 									modules: {
@@ -45,12 +50,12 @@ const config: StorybookConfig = {
 									importLoaders: 2,
 								},
 							},
-							require.resolve('resolve-url-loader'),
+							'resolve-url-loader',
 							{
-								loader: require.resolve('sass-loader'),
+								loader: 'sass-loader',
 								options: {
 									// Want to add more Sass options? Read more here: https://webpack.js.org/loaders/sass-loader/#options
-									implementation: require.resolve('sass'),
+									implementation: sass,
 									sourceMap: true,
 									sassOptions: {},
 								},
