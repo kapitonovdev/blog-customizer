@@ -14,8 +14,10 @@ import {
 	ArticleStateType,
 	OptionType,
 } from 'src/constants/articleProps';
-import { useState, FormEvent, useEffect, useRef } from 'react';
+import { useState, FormEvent, useRef } from 'react';
 import clsx from 'clsx';
+import { Text } from 'src/ui/text';
+import { useClose } from 'src/hooks/useClose';
 
 type ArticleParamsFormProps = {
 	setArticleState: (state: ArticleStateType) => void;
@@ -54,25 +56,12 @@ export const ArticleParamsForm = ({
 		setArticleState(formState);
 	};
 
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				isSidebarOpen &&
-				sidebarRef.current &&
-				!sidebarRef.current.contains(event.target as Node)
-			) {
-				const arrowButton = document.querySelector(`.${styles.arrow}`);
-				if (arrowButton && !arrowButton.contains(event.target as Node)) {
-					setIsSidebarOpen(false);
-				}
-			}
-		};
-
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, [isSidebarOpen]);
+	// закрываем по ESC или клику вне области
+	useClose({
+		isOpen: isSidebarOpen,
+		onClose: () => setIsSidebarOpen(false),
+		rootRef: sidebarRef,
+	});
 
 	const handleReset = (e: FormEvent) => {
 		e.preventDefault();
@@ -95,6 +84,9 @@ export const ArticleParamsForm = ({
 					className={styles.form}
 					onSubmit={handleSubmit}
 					onReset={handleReset}>
+					<Text as='h2' size={31} weight={800} uppercase>
+						Задайте параметры
+					</Text>
 					<Select
 						options={fontFamilyOptions}
 						selected={formState.fontFamilyOption}
